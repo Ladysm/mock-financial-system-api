@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
-http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd  http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
     <http:listener-config name="mock-financial-system-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="mock-financial-system-api-config" api="resource::209ef67a-ae27-4f34-965a-a34fed477013:mock-financial-system-api:1.0.0:raml:zip:mock-financial-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="mock-financial-system-api-config" api="resource::209ef67a-ae27-4f34-965a-a34fed477013:mock-financial-system-api:2.0.1:raml:zip:mock-financial-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="mock-financial-system-api-main">
         <http:listener config-ref="mock-financial-system-api-httpListenerConfig" path="/financial/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -126,9 +125,9 @@ output application/json
     </flow>
     <flow name="get:\accounts:mock-financial-system-api-config">
         <db:select doc:name="db-accounts" doc:id="da35baff-a4ce-43b1-a8cc-96a3f2e72b77" config-ref="Database_Config">
-			<db:sql ><![CDATA[SELECT * FROM accounts ]]></db:sql>
-		</db:select>
-		<ee:transform doc:name="account-response">
+            <db:sql><![CDATA[SELECT * FROM accounts]]></db:sql>
+        </db:select>
+        <ee:transform doc:name="account-response">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -139,9 +138,9 @@ payload]]></ee:set-payload>
     </flow>
     <flow name="get:\balances:mock-financial-system-api-config">
         <db:select doc:name="db-balances " doc:id="7078b1e3-e171-4000-941f-e6e129b120cd" config-ref="Database_Config">
-			<db:sql><![CDATA[SELECT * FROM balances ]]></db:sql>
-		</db:select>
-		<ee:transform doc:name="balances-response">
+            <db:sql><![CDATA[SELECT * FROM balances]]></db:sql>
+        </db:select>
+        <ee:transform doc:name="balances-response">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -183,9 +182,9 @@ output application/json
     </flow>
     <flow name="get:\transactions:mock-financial-system-api-config">
         <db:select doc:name="db-transactions " doc:id="0665366d-1fd1-4330-a6b1-edda3e1610ad" config-ref="Database_Config">
-			<db:sql><![CDATA[SELECT * FROM transactions ]]></db:sql>
-		</db:select>
-		<ee:transform doc:name="transactions-response">
+            <db:sql><![CDATA[SELECT * FROM transactions]]></db:sql>
+        </db:select>
+        <ee:transform doc:name="transactions-response">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -237,13 +236,13 @@ output application/json
     </flow>
     <flow name="get:\balances\(accountId):mock-financial-system-api-config">
         <db:select doc:name="db-balance-by-id" doc:id="33a0de9d-d770-45d6-a078-2589139134bb" config-ref="Database_Config">
-			<db:sql ><![CDATA[SELECT account_id, balance, currency, last_updated
+            <db:sql><![CDATA[SELECT account_id, balance, currency, last_updated
 FROM balances
 WHERE account_id = :accountId;]]></db:sql>
-			<db:input-parameters ><![CDATA[#[{
+            <db:input-parameters><![CDATA[#[{
 	"accountId": attributes.uriParams.accountId
 }]]]></db:input-parameters>
-		</db:select>
+        </db:select>
         <ee:transform doc:name="response-balance-by-id">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
@@ -255,40 +254,37 @@ payload]]></ee:set-payload>
     </flow>
     <flow name="get:\accounts\(accountId):mock-financial-system-api-config">
         <db:select doc:name="db-account-by-id" doc:id="26f5f6b9-062b-4389-9637-473b12ee8d4a" config-ref="Database_Config">
-			<db:sql><![CDATA[SELECT id, first_name, last_name, account_type, company, address, phone, website
+            <db:sql><![CDATA[SELECT id, first_name, last_name, account_type, company, address, phone, website
 FROM accounts
-WHERE id = :accountId
-]]></db:sql>
-			<db:input-parameters><![CDATA[#[{
+WHERE id = :accountId]]></db:sql>
+            <db:input-parameters><![CDATA[#[{
 	"accountId": attributes.uriParams.accountId
 }]]]></db:input-parameters>
-		</db:select>
+        </db:select>
         <ee:transform doc:name="response-account-by-id">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-payload ]]></ee:set-payload>
+payload]]></ee:set-payload>
             </ee:message>
         </ee:transform>
     </flow>
     <flow name="get:\transactions\(transactionId):mock-financial-system-api-config">
         <db:select doc:name="db-account-by-id" doc:id="42b62133-29f0-41d2-a028-c29db6d18850" config-ref="Database_Config">
-			<db:sql><![CDATA[SELECT transaction_id, account_id, date, amount, type, description
+            <db:sql><![CDATA[SELECT transaction_id, account_id, date, amount, type, description
 FROM transactions
-WHERE transaction_id = :transactionId
-
-]]></db:sql>
-			<db:input-parameters><![CDATA[#[{
+WHERE transaction_id = :transactionId]]></db:sql>
+            <db:input-parameters><![CDATA[#[{
 	"transactionId": attributes.uriParams.transactionId
 }]]]></db:input-parameters>
-		</db:select>
-		<ee:transform doc:name="response-transactions-by-id">
+        </db:select>
+        <ee:transform doc:name="response-transactions-by-id">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-payload ]]></ee:set-payload>
+payload]]></ee:set-payload>
             </ee:message>
         </ee:transform>
     </flow>

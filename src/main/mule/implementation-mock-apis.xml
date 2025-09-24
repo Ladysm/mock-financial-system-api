@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="implementation-get-all-accounts" doc:id="3e3cf812-59fc-4ad5-b965-38320e5a3dcd" >
+		<db:select doc:name="db-accounts" doc:id="36f7ea5e-4422-4bfe-b27e-59f52924d736" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT * FROM accounts ]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="account-response" doc:id="3a3eec4d-da20-4e0a-b53c-4bbcf4dea0cf" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="implementation-gell-all-balances" doc:id="4384323e-586a-4f07-b4aa-59dfcd671520" >
+		<db:select doc:name="db-balances " doc:id="5d7926cd-dbe8-42e7-9010-25c69b06d92c" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT * FROM balances ]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="balances-response" doc:id="8dfa1d77-aeca-46e9-8997-fa854181eca3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    accountId: "1",
+    balance: 1200.75,
+    currency: "USD",
+    lastUpdated: "2024-01-31"
+  }, 
+  {
+    accountId: "2",
+    balance: 300,
+    currency: "USD",
+    lastUpdated: "2024-01-31"
+  }, 
+  {
+    accountId: "3",
+    balance: 4500,
+    currency: "USD",
+    lastUpdated: "2024-01-31"
+  }, 
+  {
+    accountId: "4",
+    balance: 150.25,
+    currency: "USD",
+    lastUpdated: "2024-01-31"
+  }, 
+  {
+    accountId: "5",
+    balance: 8000,
+    currency: "USD",
+    lastUpdated: "2024-01-31"
+  }
+] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="implementation-get-all-transactionsFlow" doc:id="c674e97f-56b8-49f1-bec5-a46e3a880d79" >
+		<db:select doc:name="db-transactions " doc:id="8b92bf3c-b437-43e8-a89c-91d21aedfbf8" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT * FROM transactions ]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="transactions-response" doc:id="2eb19776-879d-4db2-8133-a018001f11b8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[
+  {
+    transactionId: "T1001",
+    accountId: "1",
+    date: "2024-01-10",
+    amount: 250.75,
+    "type": "CREDIT",
+    description: "Salary Payment"
+  }, 
+  {
+    transactionId: "T1002",
+    accountId: "1",
+    date: "2024-01-12",
+    amount: -50,
+    "type": "DEBIT",
+    description: "Grocery Shopping"
+  }, 
+  {
+    transactionId: "T2001",
+    accountId: "2",
+    date: "2024-01-15",
+    amount: -200,
+    "type": "DEBIT",
+    description: "Electronics Purchase"
+  }, 
+  {
+    transactionId: "T3001",
+    accountId: "3",
+    date: "2024-01-20",
+    amount: 1000,
+    "type": "CREDIT",
+    description: "Freelance Project"
+  }, 
+  {
+    transactionId: "T4001",
+    accountId: "4",
+    date: "2024-01-25",
+    amount: -75.5,
+    "type": "DEBIT",
+    description: "Restaurant Bill"
+  }
+] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="implementation-get-balance-by-idFlow" doc:id="61888047-a54d-4b95-8247-5bf2c5f49e66" >
+		<db:select doc:name="db-balance-by-id" doc:id="4cbf8eb2-80ec-4cc1-8e89-07ebc3c59d11" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT account_id, balance, currency, last_updated
+FROM balances
+WHERE account_id = :accountId;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"accountId": attributes.uriParams.accountId
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="response-balance-by-id" doc:id="172fd665-973e-4c3a-b4c7-a47010d32c29" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="implementation-account-by-idFlow" doc:id="cf311bf7-7b11-43c1-bfcd-c3c09007d563" >
+		<db:select doc:name="db-account-by-id" doc:id="1999662f-8502-4444-9c1c-27cc66df9ecb" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT id, first_name, last_name, account_type, company, address, phone, website
+FROM accounts
+WHERE id = :accountId
+]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"accountId": attributes.uriParams.accountId
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="response-account-by-id" doc:id="3f985708-0cad-4804-a171-2b01cc99ff9c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="implementation-transaction-by-idFlow" doc:id="cc2edd08-a6e7-428d-ab96-ba26cf4b83be" >
+		<db:select doc:name="db-transactions-by-id" doc:id="e37a5416-aa67-44c5-bebd-e29bca1a2009" config-ref="Database_Config" >
+			<db:sql ><![CDATA[SELECT transaction_id, account_id, date, amount, type, description
+FROM transactions
+WHERE transaction_id = :transactionId
+
+]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"transactionId": attributes.uriParams.transactionId
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="response-transactions-by-id" doc:id="2f4bc589-74fc-48b7-b476-71115630e656" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

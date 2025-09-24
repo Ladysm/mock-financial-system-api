@@ -9,5 +9,5 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="03ab3e28-b3c2-4a3d-846b-4db9c4f63352" >
 		<db:my-sql-connection host="${database.host}" port="${database.port}" user="${database.user}" password="${database.password}" database="${database.database-name}" />
 	</db:config>
-	<api-gateway:autodiscovery apiId="20533168" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="1747d7e0-7905-4da3-85e6-08194ff79b35" flowRef="mock-financial-system-api-main" />
+	<api-gateway:autodiscovery apiId="20533476" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="15bdadba-e9f6-480e-b638-8a8d5c9c2d9c" flowRef="mock-financial-system-api-main" />
 </mule>
