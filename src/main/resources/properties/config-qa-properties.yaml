@@ -1,8 +1,8 @@
 "listener":
   "base-path": "/piloto/*"
 "database":
-  "database-name": "movie_catalog"
-  "host": "localhost"
-  "user" :  "root"
-  "password": "root"
+  "database-name": "inventory"
+  "host": "database-librarybooks.c16mwww003n1.us-east-1.rds.amazonaws.com"
+  "user" :  "admin"
+  "password": "Artemisateamo96"
   "port": "3306"

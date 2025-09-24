@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
     <http:listener-config name="mock-financial-system-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
@@ -124,68 +125,23 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\accounts:mock-financial-system-api-config">
-        <ee:transform doc:name="Transform Message">
+        <db:select doc:name="db-accounts" doc:id="da35baff-a4ce-43b1-a8cc-96a3f2e72b77" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * FROM accounts ]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="account-response">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-[
-  {
-    id: "1",
-    firstName: "Alice",
-    lastName: "Smith",
-    accountType: "Premium",
-    company: "MuleSoft Inc.",
-    address: "101 Main Street, San Francisco",
-    phone: "+1-555-111-1111",
-    website: "https://www.mulesoft.com"
-  }, 
-  {
-    id: "2",
-    firstName: "Bob",
-    lastName: "Johnson",
-    accountType: "Basic",
-    company: "Tech Solutions",
-    address: "202 Tech Avenue, New York",
-    phone: "+1-555-222-2222",
-    website: "https://www.techsolutions.com"
-  }, 
-  {
-    id: "3",
-    firstName: "Carlos",
-    lastName: "Ramirez",
-    accountType: "Gold",
-    company: "Finanzas Globales",
-    address: "303 Finance Blvd, Mexico City",
-    phone: "+52-555-333-3333",
-    website: "https://www.finanzasglobales.mx"
-  }, 
-  {
-    id: "4",
-    firstName: "Diana",
-    lastName: "Martinez",
-    accountType: "Standard",
-    company: "RetailCorp",
-    address: "404 Retail Street, Bogotá",
-    phone: "+57-1-444-4444",
-    website: "https://www.retailcorp.co"
-  }, 
-  {
-    id: "5",
-    firstName: "Ethan",
-    lastName: "Brown",
-    accountType: "Platinum",
-    company: "Tech Innovators",
-    address: "505 Innovation Drive, London",
-    phone: "+44-20-555-5555",
-    website: "https://www.techinnovators.uk"
-  }
-] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+payload]]></ee:set-payload>
             </ee:message>
         </ee:transform>
     </flow>
     <flow name="get:\balances:mock-financial-system-api-config">
-        <ee:transform doc:name="Transform Message">
+        <db:select doc:name="db-balances " doc:id="7078b1e3-e171-4000-941f-e6e129b120cd" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM balances ]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="balances-response">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -226,7 +182,10 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="get:\transactions:mock-financial-system-api-config">
-        <ee:transform doc:name="Transform Message">
+        <db:select doc:name="db-transactions " doc:id="0665366d-1fd1-4330-a6b1-edda3e1610ad" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * FROM transactions ]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="transactions-response">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -277,68 +236,59 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="get:\balances\(accountId):mock-financial-system-api-config">
-        <ee:transform doc:name="Transform Message">
-            <ee:variables>
-                <ee:set-variable variableName="accountId">attributes.uriParams.'accountId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform doc:name="Transform Message">
+        <db:select doc:name="db-balance-by-id" doc:id="33a0de9d-d770-45d6-a078-2589139134bb" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT account_id, balance, currency, last_updated
+FROM balances
+WHERE account_id = :accountId;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"accountId": attributes.uriParams.accountId
+}]]]></db:input-parameters>
+		</db:select>
+        <ee:transform doc:name="response-balance-by-id">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{
-  accountId: "1",
-  balance: 1200.75,
-  currency: "USD",
-  lastUpdated: "2024-01-31"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+payload]]></ee:set-payload>
             </ee:message>
         </ee:transform>
     </flow>
     <flow name="get:\accounts\(accountId):mock-financial-system-api-config">
-        <ee:transform doc:name="Transform Message">
-            <ee:variables>
-                <ee:set-variable variableName="accountId">attributes.uriParams.'accountId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform doc:name="Transform Message">
+        <db:select doc:name="db-account-by-id" doc:id="26f5f6b9-062b-4389-9637-473b12ee8d4a" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT id, first_name, last_name, account_type, company, address, phone, website
+FROM accounts
+WHERE id = :accountId
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	"accountId": attributes.uriParams.accountId
+}]]]></db:input-parameters>
+		</db:select>
+        <ee:transform doc:name="response-account-by-id">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{
-  id: "1",
-  firstName: "Alice",
-  lastName: "Smith",
-  accountType: "Premium",
-  company: "MuleSoft Inc.",
-  address: "101 Main Street, San Francisco",
-  phone: "+1-555-111-1111",
-  website: "https://www.mulesoft.com"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+payload ]]></ee:set-payload>
             </ee:message>
         </ee:transform>
     </flow>
     <flow name="get:\transactions\(transactionId):mock-financial-system-api-config">
-        <ee:transform doc:name="Transform Message">
-            <ee:variables>
-                <ee:set-variable variableName="transactionId">attributes.uriParams.'transactionId'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform doc:name="Transform Message">
+        <db:select doc:name="db-account-by-id" doc:id="42b62133-29f0-41d2-a028-c29db6d18850" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT transaction_id, account_id, date, amount, type, description
+FROM transactions
+WHERE transaction_id = :transactionId
+
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	"transactionId": attributes.uriParams.transactionId
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="response-transactions-by-id">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-{
-  transactionId: "T1001",
-  accountId: "1",
-  date: "2024-01-10",
-  amount: 250.75,
-  "type": "CREDIT",
-  description: "Salary Payment"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+payload ]]></ee:set-payload>
             </ee:message>
         </ee:transform>
     </flow>

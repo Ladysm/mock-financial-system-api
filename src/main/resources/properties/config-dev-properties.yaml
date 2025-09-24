@@ -1,0 +1,8 @@
+"listener":
+  "base-path": "/piloto/*"
+"database":
+  "database-name": "movie_catalog"
+  "host": "localhost"
+  "user" :  "root"
+  "password": "root"
+  "port": "3306"
