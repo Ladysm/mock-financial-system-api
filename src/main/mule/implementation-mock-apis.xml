@@ -204,7 +204,27 @@ payload ]]></ee:set-payload>
 output application/json
 ---
 {
-  message: "created"
+  message: " transaction created"
+} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="implementation-delete-transaction-flow" doc:id="cf0dd359-b90d-4409-a0eb-86d84ef34315" >
+		<db:delete doc:name="db-delete-transacion" doc:id="044b96fa-b816-4e70-a4ec-442b998a4e93" config-ref="Database_Config">
+			<db:sql ><![CDATA[DELETE FROM transactions
+WHERE transactionId = :transactionId;
+]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+  "transactionId": attributes.uriParams.transactionId
+}]]]></db:input-parameters>
+		</db:delete>
+		<ee:transform doc:name="message-response" doc:id="352e4c50-adee-4703-972f-26b42e299b6a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "Transaction deleted successfully"
 } as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
