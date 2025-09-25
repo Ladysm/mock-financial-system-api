@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>209ef67a-ae27-4f34-965a-a34fed477013</groupId>
 			<artifactId>mock-financial-system-api</artifactId>
-			<version>2.0.1</version>
+			<version>2.0.4</version>
 			<classifier>raml</classifier>
 			<type>zip</type>
 		</dependency>

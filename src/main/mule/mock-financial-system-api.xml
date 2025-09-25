@@ -3,7 +3,7 @@
     <http:listener-config name="mock-financial-system-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
-    <apikit:config name="mock-financial-system-api-config" api="resource::209ef67a-ae27-4f34-965a-a34fed477013:mock-financial-system-api:2.0.1:raml:zip:mock-financial-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="mock-financial-system-api-config" api="resource::209ef67a-ae27-4f34-965a-a34fed477013:mock-financial-system-api:2.0.4:raml:zip:mock-financial-system-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="mock-financial-system-api-main">
         <http:listener config-ref="mock-financial-system-api-httpListenerConfig" path="/financial/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -124,21 +124,24 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\accounts:mock-financial-system-api-config">
-		<flow-ref doc:name="implementation-get-all-accounts" doc:id="514b0f9c-f62e-474c-8449-2b3c44be2a19" name="implementation-get-all-accounts"/>
+        <flow-ref doc:name="implementation-get-all-accounts" doc:id="514b0f9c-f62e-474c-8449-2b3c44be2a19" name="implementation-get-all-accounts" />
     </flow>
     <flow name="get:\balances:mock-financial-system-api-config">
-		<flow-ref doc:name="implementation-gell-all-balances" doc:id="72da7fbf-ad50-4439-8161-0f508c668647" name="implementation-gell-all-balances"/>
+        <flow-ref doc:name="implementation-gell-all-balances" doc:id="72da7fbf-ad50-4439-8161-0f508c668647" name="implementation-gell-all-balances" />
     </flow>
     <flow name="get:\transactions:mock-financial-system-api-config">
-		<flow-ref doc:name="implementation-get-all-transactionsFlow" doc:id="73d5eef9-a77c-47ac-8bf9-2cb994bedbbf" name="implementation-get-all-transactionsFlow"/>
+        <flow-ref doc:name="implementation-get-all-transactionsFlow" doc:id="73d5eef9-a77c-47ac-8bf9-2cb994bedbbf" name="implementation-get-all-transactionsFlow" />
     </flow>
     <flow name="get:\balances\(accountId):mock-financial-system-api-config">
-        <flow-ref doc:name="implementation-get-balance-by-idFlow" doc:id="6e576160-7f40-4f26-99bc-59b2a47b1093" name="implementation-get-balance-by-idFlow"/>
+        <flow-ref doc:name="implementation-get-balance-by-idFlow" doc:id="6e576160-7f40-4f26-99bc-59b2a47b1093" name="implementation-get-balance-by-idFlow" />
     </flow>
     <flow name="get:\accounts\(accountId):mock-financial-system-api-config">
-        <flow-ref doc:name="implementation-account-by-idFlow" doc:id="a41e859c-e765-4d3b-9458-5c8f50382b86" name="implementation-account-by-idFlow"/>
+        <flow-ref doc:name="implementation-account-by-idFlow" doc:id="a41e859c-e765-4d3b-9458-5c8f50382b86" name="implementation-account-by-idFlow" />
     </flow>
     <flow name="get:\transactions\(transactionId):mock-financial-system-api-config">
-        <flow-ref doc:name="implementation-transaction-by-idFlow" doc:id="65b744bb-2cdb-4121-99bf-a93fdb877b30" name="implementation-transaction-by-idFlow"/>
+        <flow-ref doc:name="implementation-transaction-by-idFlow" doc:id="65b744bb-2cdb-4121-99bf-a93fdb877b30" name="implementation-transaction-by-idFlow" />
+    </flow>
+    <flow name="post:\transactions:application\json:mock-financial-system-api-config">
+        <flow-ref doc:name="implementation-create-transaction-flow" doc:id="57cc7698-e879-444e-b5f0-e585faf5b0cf" name="implementation-create-transaction-flow" />
     </flow>
 </mule>
