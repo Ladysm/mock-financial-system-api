@@ -124,168 +124,21 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\accounts:mock-financial-system-api-config">
-        <db:select doc:name="db-accounts" doc:id="da35baff-a4ce-43b1-a8cc-96a3f2e72b77" config-ref="Database_Config">
-            <db:sql><![CDATA[SELECT * FROM accounts]]></db:sql>
-        </db:select>
-        <ee:transform doc:name="account-response">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="implementation-get-all-accounts" doc:id="514b0f9c-f62e-474c-8449-2b3c44be2a19" name="implementation-get-all-accounts"/>
     </flow>
     <flow name="get:\balances:mock-financial-system-api-config">
-        <db:select doc:name="db-balances " doc:id="7078b1e3-e171-4000-941f-e6e129b120cd" config-ref="Database_Config">
-            <db:sql><![CDATA[SELECT * FROM balances]]></db:sql>
-        </db:select>
-        <ee:transform doc:name="balances-response">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-[
-  {
-    accountId: "1",
-    balance: 1200.75,
-    currency: "USD",
-    lastUpdated: "2024-01-31"
-  }, 
-  {
-    accountId: "2",
-    balance: 300,
-    currency: "USD",
-    lastUpdated: "2024-01-31"
-  }, 
-  {
-    accountId: "3",
-    balance: 4500,
-    currency: "USD",
-    lastUpdated: "2024-01-31"
-  }, 
-  {
-    accountId: "4",
-    balance: 150.25,
-    currency: "USD",
-    lastUpdated: "2024-01-31"
-  }, 
-  {
-    accountId: "5",
-    balance: 8000,
-    currency: "USD",
-    lastUpdated: "2024-01-31"
-  }
-] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="implementation-gell-all-balances" doc:id="72da7fbf-ad50-4439-8161-0f508c668647" name="implementation-gell-all-balances"/>
     </flow>
     <flow name="get:\transactions:mock-financial-system-api-config">
-        <db:select doc:name="db-transactions " doc:id="0665366d-1fd1-4330-a6b1-edda3e1610ad" config-ref="Database_Config">
-            <db:sql><![CDATA[SELECT * FROM transactions]]></db:sql>
-        </db:select>
-        <ee:transform doc:name="transactions-response">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-[
-  {
-    transactionId: "T1001",
-    accountId: "1",
-    date: "2024-01-10",
-    amount: 250.75,
-    "type": "CREDIT",
-    description: "Salary Payment"
-  }, 
-  {
-    transactionId: "T1002",
-    accountId: "1",
-    date: "2024-01-12",
-    amount: -50,
-    "type": "DEBIT",
-    description: "Grocery Shopping"
-  }, 
-  {
-    transactionId: "T2001",
-    accountId: "2",
-    date: "2024-01-15",
-    amount: -200,
-    "type": "DEBIT",
-    description: "Electronics Purchase"
-  }, 
-  {
-    transactionId: "T3001",
-    accountId: "3",
-    date: "2024-01-20",
-    amount: 1000,
-    "type": "CREDIT",
-    description: "Freelance Project"
-  }, 
-  {
-    transactionId: "T4001",
-    accountId: "4",
-    date: "2024-01-25",
-    amount: -75.5,
-    "type": "DEBIT",
-    description: "Restaurant Bill"
-  }
-] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="implementation-get-all-transactionsFlow" doc:id="73d5eef9-a77c-47ac-8bf9-2cb994bedbbf" name="implementation-get-all-transactionsFlow"/>
     </flow>
     <flow name="get:\balances\(accountId):mock-financial-system-api-config">
-        <db:select doc:name="db-balance-by-id" doc:id="33a0de9d-d770-45d6-a078-2589139134bb" config-ref="Database_Config">
-            <db:sql><![CDATA[SELECT account_id, balance, currency, last_updated
-FROM balances
-WHERE account_id = :accountId;]]></db:sql>
-            <db:input-parameters><![CDATA[#[{
-	"accountId": attributes.uriParams.accountId
-}]]]></db:input-parameters>
-        </db:select>
-        <ee:transform doc:name="response-balance-by-id">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="implementation-account-by-idFlow" doc:id="6e576160-7f40-4f26-99bc-59b2a47b1093" name="implementation-account-by-idFlow"/>
     </flow>
     <flow name="get:\accounts\(accountId):mock-financial-system-api-config">
-        <db:select doc:name="db-account-by-id" doc:id="26f5f6b9-062b-4389-9637-473b12ee8d4a" config-ref="Database_Config">
-            <db:sql><![CDATA[SELECT id, first_name, last_name, account_type, company, address, phone, website
-FROM accounts
-WHERE id = :accountId]]></db:sql>
-            <db:input-parameters><![CDATA[#[{
-	"accountId": attributes.uriParams.accountId
-}]]]></db:input-parameters>
-        </db:select>
-        <ee:transform doc:name="response-account-by-id">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="implementation-account-by-idFlow" doc:id="a41e859c-e765-4d3b-9458-5c8f50382b86" name="implementation-account-by-idFlow"/>
     </flow>
     <flow name="get:\transactions\(transactionId):mock-financial-system-api-config">
-        <db:select doc:name="db-account-by-id" doc:id="42b62133-29f0-41d2-a028-c29db6d18850" config-ref="Database_Config">
-            <db:sql><![CDATA[SELECT transaction_id, account_id, date, amount, type, description
-FROM transactions
-WHERE transaction_id = :transactionId]]></db:sql>
-            <db:input-parameters><![CDATA[#[{
-	"transactionId": attributes.uriParams.transactionId
-}]]]></db:input-parameters>
-        </db:select>
-        <ee:transform doc:name="response-transactions-by-id">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="implementation-transaction-by-idFlow" doc:id="65b744bb-2cdb-4121-99bf-a93fdb877b30" name="implementation-transaction-by-idFlow"/>
     </flow>
 </mule>

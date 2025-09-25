@@ -118,9 +118,9 @@ output application/json
 	</flow>
 	<flow name="implementation-get-balance-by-idFlow" doc:id="61888047-a54d-4b95-8247-5bf2c5f49e66" >
 		<db:select doc:name="db-balance-by-id" doc:id="4cbf8eb2-80ec-4cc1-8e89-07ebc3c59d11" config-ref="Database_Config" >
-			<db:sql ><![CDATA[SELECT account_id, balance, currency, last_updated
+			<db:sql ><![CDATA[SELECT accountId, balance, currency, lastUpdated
 FROM balances
-WHERE account_id = :accountId;]]></db:sql>
+WHERE accountId = :accountId;]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{
 	"accountId": attributes.uriParams.accountId
 }]]]></db:input-parameters>
@@ -136,7 +136,7 @@ payload]]></ee:set-payload>
 	</flow>
 	<flow name="implementation-account-by-idFlow" doc:id="cf311bf7-7b11-43c1-bfcd-c3c09007d563" >
 		<db:select doc:name="db-account-by-id" doc:id="1999662f-8502-4444-9c1c-27cc66df9ecb" config-ref="Database_Config" >
-			<db:sql ><![CDATA[SELECT id, first_name, last_name, account_type, company, address, phone, website
+			<db:sql ><![CDATA[SELECT id, firstName, lastName, accountType, company, address, phone, website
 FROM accounts
 WHERE id = :accountId
 ]]></db:sql>
@@ -155,9 +155,9 @@ payload ]]></ee:set-payload>
 	</flow>
 	<flow name="implementation-transaction-by-idFlow" doc:id="cc2edd08-a6e7-428d-ab96-ba26cf4b83be" >
 		<db:select doc:name="db-transactions-by-id" doc:id="e37a5416-aa67-44c5-bebd-e29bca1a2009" config-ref="Database_Config" >
-			<db:sql ><![CDATA[SELECT transaction_id, account_id, date, amount, type, description
+			<db:sql ><![CDATA[SELECT transactionId, accountId, date, amount, type, description
 FROM transactions
-WHERE transaction_id = :transactionId
+WHERE transactionId = :transactionId
 
 ]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{
